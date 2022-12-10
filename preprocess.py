@@ -32,7 +32,7 @@ def generate_word_to_index(words):
 
 def generate_training_data(window_size):
     words = []
-    for i in range(7):
+    for i in range(1):
       words += process_file(f'./corpus/Book{i + 1}.txt')
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)

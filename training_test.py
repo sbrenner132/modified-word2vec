@@ -1,6 +1,8 @@
 import numpy as np
 from preprocess import generate_training_data
 from word2vec import skip_gram_model
+from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 def create_onehot(indices, vocab_size):
     if isinstance(indices, int):
@@ -21,16 +23,19 @@ def cross_entropy_loss (y, y_hat):
 
 indices, ctxs, _, vocab_size = generate_training_data(2)
 
-num_itterations = 1000000
+num_itterations = 10000
+print(vocab_size)
 fitness = []
-model = skip_gram_model(np.random.rand(vocab_size, 300), np.random.rand(300, vocab_size))
-for iter in range(num_itterations):
-    print(iter)
+model = skip_gram_model(np.random.rand(vocab_size, 12), np.random.rand(12, vocab_size))
+for iter in tqdm(range(num_itterations)):
+    #print(iter)
     sample_number = np.random.randint(len(indices))
     x = create_onehot(indices[sample_number], vocab_size)
     y = create_onehot(ctxs[sample_number], vocab_size)
     y_hat, h = model.forward_step(x)
     loss = y_hat - y
     loss = loss
-    print("\t", cross_entropy_loss(y, y_hat))
+    fitness.append(cross_entropy_loss(y, y_hat))
+    #print("\t", cross_entropy_loss(y, y_hat))
     model.backward_step(loss, 0.1, x, h)
+plt.plot(fitness)
