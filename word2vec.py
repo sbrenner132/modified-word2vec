@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg import get_blas_funcs
 from scipy.special import softmax
 
 
@@ -25,14 +26,11 @@ class skip_gram_model():
         :param onehot: A one hot encoded version of the matrix
         :return: a tuple containing: the output matrix
         """
-        self.last_step["onehot"] = onehot
         h = onehot @ self.embedding
-        self.last_step["h"] = h
         i = h @ self.context
-        x_hat = softmax(i)
-        return x_hat
+        return softmax(i), h
 
-    def backward_step(self, loss, learning_rate):
+    def backward_step(self, loss, learning_rate, onehot, h):
         """
         Perform one backpropagation step
 
@@ -40,8 +38,9 @@ class skip_gram_model():
         :param learning_rate:
         :return:
         """
-        d_dcontext = self.last_step["h"].T @ loss
-        d_dembedding = self.last_step["onehot"] @ loss @ self.context.T
+        d_dcontext = h.T @ loss
+        d_dembedding = onehot.T @ loss
+        d_dembedding = d_dembedding @ self.context.T
         self.context -= learning_rate * d_dcontext
         self.embedding -= learning_rate * d_dembedding
 
