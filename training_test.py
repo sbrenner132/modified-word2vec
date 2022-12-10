@@ -3,6 +3,7 @@ from preprocess import generate_training_data
 from word2vec import skip_gram_model
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from scipy.special import xlogy
 
 def create_onehot(indices, vocab_size):
     if isinstance(indices, int):
@@ -19,7 +20,7 @@ def create_single_onehot(index, vocab_size):
     return vector
 
 def cross_entropy_loss (y, y_hat):
-  return - np.sum(y*np.log(y_hat))
+  return - np.sum(xlogy(y, y_hat))
 
 indices, ctxs, _, vocab_size = generate_training_data(2)
 
@@ -38,6 +39,6 @@ for iter in tqdm(range(num_itterations)):
     #print("\t", cross_entropy_loss(y, y_hat))
     model.backward_step(loss, 0.1, x, h)
     if iter % 1000 == 0:
-        print(loss)
+        print(fitness[-1])
 print(fitness)
 plt.plot(fitness)
