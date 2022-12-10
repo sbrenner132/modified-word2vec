@@ -34,8 +34,10 @@ for iter in tqdm(range(num_itterations)):
     y = create_onehot(ctxs[sample_number], vocab_size)
     y_hat, h = model.forward_step(x)
     loss = y_hat - y
-    loss = loss
     fitness.append(cross_entropy_loss(y, y_hat))
     #print("\t", cross_entropy_loss(y, y_hat))
     model.backward_step(loss, 0.1, x, h)
+    if iter % 1000 == 0:
+        print(loss)
+print(fitness)
 plt.plot(fitness)
