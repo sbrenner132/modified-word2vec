@@ -30,8 +30,10 @@ def generate_word_to_index(words):
         index += 1
     return word_to_index
 
-def generate_training_data(book, window_size):
-    words = process_file(f'./corpus/Book{book}.txt')
+def generate_training_data(window_size):
+    words = []
+    for i in range(7):
+      words += process_file(f'./corpus/Book{i + 1}.txt')
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)
     
@@ -59,4 +61,4 @@ def concat(*iterables):
   for iterable in iterables:
     yield from iterable
 
-indecies, ctxs = generate_training_data(1, 2)
+indices, ctxs = generate_training_data(2)
