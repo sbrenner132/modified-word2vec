@@ -37,12 +37,12 @@ def generate_training_data(window_size):
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)
     
-    indecies, ctxs = [], []
+    indices, ctxs = [], []
     
     n = len(words)
     
     for i in range(n):
-      indecies.append(word_to_index[words[i]])
+      indices.append(word_to_index[words[i]])
       idx = concat(
         range(max(0, i - window_size), i), 
         range(i, min(n, i + window_size + 1))
@@ -55,10 +55,8 @@ def generate_training_data(window_size):
         word_ctx.append(word_to_index[words[j]])
       ctxs.append(word_ctx)
         
-    return indecies, ctxs
+    return indices, ctxs, word_to_index, len(word_to_index.keys())
     
 def concat(*iterables):
   for iterable in iterables:
     yield from iterable
-
-indices, ctxs = generate_training_data(2)
