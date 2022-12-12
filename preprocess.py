@@ -1,5 +1,8 @@
 import itertools
 import string
+import numpy as np
+import matplotlib.pyplot as plt
+import os.path
 
 start_quote = '“'
 end_quote = '”'
@@ -23,7 +26,7 @@ def process_file(file: str):
   return list(itertools.chain(*words))
 
 def generate_word_to_index(words):
-    word_to_index, index = {}, 0  # start indexing from 1
+    word_to_index, index = {}, 0
     for word in words:
       if word not in word_to_index:
         word_to_index[word] = index
@@ -32,17 +35,20 @@ def generate_word_to_index(words):
 
 def generate_training_data(window_size):
     with open('testrun/logs.txt', 'a') as f:
-        f.write("\nBeginning pre-preprocessing")
+      f.write("\nBeginning pre-preprocessing")
 
     words =  process_file('./corpus/Book7.txt')
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)
     
     indices, ctxs = [], []
+    vocab_size = len(word_to_index.keys())
     
     n = len(words)
     with open('testrun/logs.txt', 'a') as f:
-        f.write("\nMiddle of pre-preprocessing: word count = " + str(len(words)))
+      f.write("\nMiddle of pre-preprocessing: word count = " + str(len(words)))
+
+    cooccurrence = np.zeros(shape=(vocab_size, vocab_size)) # creating the co-occurence matrix
 
     for i in range(n):
       indices.append(word_to_index[words[i]])
@@ -55,14 +61,32 @@ def generate_training_data(window_size):
       word_ctx = []
       for j in idx:
         if i == j:
-            continue
+          continue
         word_ctx.append(word_to_index[words[j]])
+        cooccurrence[word_to_index[words[i]]][word_to_index[words[j]]] += 1
       ctxs.append(word_ctx)
 
-    with open('testrun/logs.txt', 'a') as f:
-        f.write("\nFinished pre-preprocessing")
 
-    return indices, ctxs, word_to_index, len(word_to_index.keys())
+    # see if data is cached
+    if os.path.isfile('testrun/u.npy') and os.path.isfile('testrun/s.npy') and os.path.isfile('testrun/vh.npy'):
+      u = np.load('testrun/u.npy')
+      s = np.load('testrun/s.npy')
+      vh = np.load('testrun/vh.npy')
+    else:
+      u, s, vh = np.linalg.svd(cooccurrence, hermitian=True)
+      np.save('testrun/u', u)
+      np.save('testrun/s', s)
+      np.save('testrun/vh', vh)
+
+    fig, ax = plt.subplots(1, 1, sharex=True, sharey=True)
+
+    ax.plot(s[:100])
+    fig.savefig("testrun/s.png")
+
+    with open('testrun/logs.txt', 'a') as f:
+      f.write("\nFinished pre-preprocessing")
+
+    return indices, ctxs, word_to_index, vocab_size, u, s, vh
     
 def concat(*iterables):
   for iterable in iterables:
