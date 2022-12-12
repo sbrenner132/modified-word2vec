@@ -22,7 +22,7 @@ if __name__ == "__main__":
     with open('testrun/logs.txt', 'w') as f:
         f.write('Starting process')
 
-    indices, ctxs, word_dict, vocab_size = generate_training_data(3)
+    indices, ctxs, word_dict, vocab_size, u, s, vh = generate_training_data(3)
 
     with open('testrun/word_dict_books12.pickle', 'wb') as handle:
         pickle.dump(word_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
