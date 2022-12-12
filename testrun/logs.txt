@@ -1,17 +1,10 @@
 Starting process
 Beginning pre-preprocessing
-Middle of pre-preprocessing: word count = 165415
+Middle of pre-preprocessing: word count = 165406
 Finished pre-preprocessing
-Begin training model, Vocab size = 11855
+Begin training model, Vocab size = 11853
 Initialized model
 Constructed first vector
 First forward step
 First backward step
-Iteration - 0	421.55425919375665
-Iteration - 100	396.5722151374195
-Iteration - 200	399.6088185613531
-Iteration - 300	400.9541562220801
-Iteration - 400	342.1010292032205
-Iteration - 500	391.39413721505986
-Iteration - 600	373.68508269548835
-Iteration - 700	342.8236005655825
+Iteration - 0	618.2134082592112
