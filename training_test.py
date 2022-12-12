@@ -4,14 +4,15 @@ from word2vec import skip_gram_model
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import pickle
+from numba import njit
 
-
+@njit
 def create_onehot(index, vocab_size):
     vector = np.zeros((1, vocab_size))
     vector[0, index] = 1
     return vector
 
-
+@njit
 def cross_entropy_loss(y, y_hat):
     return - np.sum((y * np.log(y_hat)))
 

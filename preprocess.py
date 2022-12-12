@@ -34,9 +34,7 @@ def generate_training_data(window_size):
     with open('testrun/logs.txt', 'a') as f:
         f.write("\nBeginning pre-preprocessing")
 
-    words = []
-    for i in range(2):
-      words += process_file(f'./corpus/Book{i + 1}.txt')
+    words =  process_file('./corpus/Book7.txt')
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)
     
