@@ -31,8 +31,11 @@ def generate_word_to_index(words):
     return word_to_index
 
 def generate_training_data(window_size):
+    with open('testrun/logs.txt', 'a') as f:
+        f.write("\nBeginning pre-preprocessing")
+
     words = []
-    for i in range(1):
+    for i in range(2):
       words += process_file(f'./corpus/Book{i + 1}.txt')
     words = [word for word in words if word not in ['the', 'to', 'of', 'a', 'and', 'in', 'that', 'have', 'i', 'be']]
     word_to_index = generate_word_to_index(words)
@@ -40,21 +43,27 @@ def generate_training_data(window_size):
     indices, ctxs = [], []
     
     n = len(words)
-    
+    with open('testrun/logs.txt', 'a') as f:
+        f.write("\nMiddle of pre-preprocessing: word count = " + str(len(words)))
+
     for i in range(n):
       indices.append(word_to_index[words[i]])
       idx = concat(
         range(max(0, i - window_size), i), 
         range(i, min(n, i + window_size + 1))
       )
-    
+
+
       word_ctx = []
       for j in idx:
         if i == j:
             continue
         word_ctx.append(word_to_index[words[j]])
       ctxs.append(word_ctx)
-        
+
+    with open('testrun/logs.txt', 'a') as f:
+        f.write("\nFinished pre-preprocessing")
+
     return indices, ctxs, word_to_index, len(word_to_index.keys())
     
 def concat(*iterables):

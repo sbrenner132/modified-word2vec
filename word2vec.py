@@ -1,7 +1,7 @@
 import numpy as np
-from scipy.linalg import get_blas_funcs
-from scipy.special import softmax
 
+
+# from scipy.special import softmax
 
 class skip_gram_model():
     """
@@ -17,7 +17,6 @@ class skip_gram_model():
         """
         self.embedding = initial_embedding
         self.context = initial_context
-        self.last_step = {}
 
     def forward_step(self, onehot):
         """
@@ -28,7 +27,8 @@ class skip_gram_model():
         """
         h = onehot @ self.embedding
         i = h @ self.context
-        return softmax(i), h
+        # assert np.allclose(softmax(i, 1),custom_softmax(i, 1))
+        return custom_softmax(i), h
 
     def backward_step(self, loss, learning_rate, onehot, h):
         """
@@ -39,12 +39,10 @@ class skip_gram_model():
         :return:
         """
         d_dcontext = h.T @ loss
-        d_dembedding = onehot.T @ loss
-        d_dembedding = d_dembedding @ self.context.T
+        d_dembedding = onehot.T @ loss @ self.context.T
         self.context -= learning_rate * d_dcontext
         self.embedding -= learning_rate * d_dembedding
 
-
-
-
-
+def custom_softmax(x, axis=1):
+    """Compute softmax values for each sets of scores in x."""
+    return np.divide(np.exp(x), np.sum(np.exp(x), axis).reshape(x.shape[0], 1))
