@@ -7,7 +7,7 @@
 #SBATCH --job-name=train_word2vec
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=zacharyboroda@brandeis.edu
-#SBATCH --output=testrun/output_training_test.txt
+#SBATCH --output=trainingoutput/output_training_test.txt
 #SBATCH --tasks=1
 #SBATCH --cpus-per-task=128
 
