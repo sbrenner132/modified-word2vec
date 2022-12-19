@@ -1,0 +1,8 @@
+Starting process
+Beginning pre-preprocessing
+Middle of pre-preprocessing: word count = 163312
+Loading already completed svd
+Finished pre-preprocessing
+Finished preprocessing, Vocab size = 11286
+Initialized modelSeeding random for matricesSeeding random
+Initialized model
