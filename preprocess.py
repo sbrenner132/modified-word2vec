@@ -4,8 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os.path
 
+from sklearn.decomposition import TruncatedSVD
+
 start_quote = '“'
 end_quote = '”'
+apostrophe_s = "’s"
 
 
 def filter_lines(file: str):
@@ -21,8 +24,8 @@ def filter_lines(file: str):
 
 def process_line(line: str):
     words = line.split()
-    return [word.strip(start_quote).strip(end_quote).translate(str.maketrans('', '', string.punctuation)).lower() for
-            word in words]
+    return [word.strip(start_quote).strip(end_quote).strip(apostrophe_s).translate(
+        str.maketrans('', '', string.punctuation)).lower() for word in words]
 
 
 def process_file(file: str):
@@ -84,15 +87,17 @@ def generate_training_data(window_size):
         with open('trainingoutput/logs.txt', 'a') as f:
             f.write("\nBegining svd")
         u, s, vh = np.linalg.svd(cooccurrence, hermitian=True)
-        np.save('trainingoutput/u', u)
-        np.save('trainingoutput/s', s)
-        np.save('trainingoutput/vh', vh)
+        np.save('trainingoutput/u', u[:, :100])
+        np.save('trainingoutput/s', s[:100])
+        np.save('trainingoutput/vh', vh[:, :100])
         with open('trainingoutput/logs.txt', 'a') as f:
             f.write("\nFinishing svd")
-
+    u = u[:, :100]
+    s = s[:100]
+    vh = vh[:, :100]
     fig, ax = plt.subplots(1, 1, sharex=True, sharey=True)
 
-    ax.plot(s[:100])
+    ax.plot(s)
     fig.savefig("trainingoutput/s.png")
 
     with open('trainingoutput/logs.txt', 'a') as f:

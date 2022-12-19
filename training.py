@@ -18,7 +18,7 @@ def cross_entropy_loss(y, y_hat):
 
 def train_model(model, indices, ctxs, vocab_size, num_itterations, logspath, filespath):
     fitness = []
-    batch_size = 10
+    batch_size = 25
     for iter in tqdm(range(num_itterations)):
         sample_numbers = np.random.randint(vocab_size, size=(batch_size))
         x = []
@@ -86,7 +86,7 @@ def training_setup(use_cooccurrence_matrix = False, seed_random = False):
         f.write("\nInitialized model")
 
     if use_cooccurrence_matrix:
-        model = skip_gram_model(u[:,:20], vh[:,:20].T)
+        model = skip_gram_model(u[:, :20], vh[:, :20].T)
     else:
         if seed_random:
             with open('trainingoutput/logs.txt', 'a') as f:
